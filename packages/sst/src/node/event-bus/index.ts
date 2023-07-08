@@ -10,13 +10,13 @@ import {
   PutEventsCommand,
 } from "@aws-sdk/client-eventbridge";
 import { EventBridgeEvent } from "aws-lambda";
-import { ZodAny, ZodObject, ZodRawShape, z } from "zod";
+import { Schema, Infer, assert } from "@decs/typeschema";
 
 const client = new EventBridgeClient({});
 
 export function createEventBuilder<
   Bus extends keyof typeof EventBus,
-  MetadataShape extends ZodRawShape | undefined,
+  MetadataShape extends { [k: string]: Schema<any> } | undefined,
   MetadataFunction extends () => any
 >(props: {
   bus: Bus;
@@ -25,21 +25,17 @@ export function createEventBuilder<
 }) {
   return function createEvent<
     Type extends string,
-    Shape extends ZodRawShape,
-    Properties = z.infer<ZodObject<Shape, "strip", ZodAny>>
+    Shape extends { [k: string]: Schema<any> },
+    Properties = Infer<Shape>
   >(type: Type, properties: Shape) {
     type Publish = undefined extends MetadataShape
       ? (properties: Properties) => Promise<void>
       : (
           properties: Properties,
-          metadata: z.infer<
-            ZodObject<Exclude<MetadataShape, undefined>, "strip", ZodAny>
-          >
+          metadata: Infer<Exclude<MetadataShape, undefined>>
         ) => Promise<void>;
-    const propertiesSchema = z.object(properties);
-    const metadataSchema = props.metadata
-      ? z.object(props.metadata)
-      : undefined;
+    const propertySchemas = properties;
+    const metadataSchemas = props.metadata;
     const publish = async (properties: any, metadata: any) => {
       console.log("publishing", type, properties);
       await client.send(
@@ -50,10 +46,10 @@ export function createEventBuilder<
               EventBusName: EventBus[props.bus].eventBusName,
               Source: "console",
               Detail: JSON.stringify({
-                properties: propertiesSchema.parse(properties),
-                metadata: (() => {
-                  if (metadataSchema) {
-                    return metadataSchema.parse(metadata);
+                properties: await assertMulti(propertySchemas, properties),
+                metadata: await (async () => {
+                  if (metadataSchemas) {
+                    return await assertMulti(metadataSchemas, metadata);
                   }
 
                   if (props.metadataFn) {
@@ -79,10 +75,6 @@ export function createEventBuilder<
     };
   };
 }
-
-export type inferEvent<T extends { shape: ZodObject<any> }> = z.infer<
-  T["shape"]
->;
 
 type Event = {
   type: string;
@@ -116,4 +108,22 @@ export function EventHandler<Events extends Event>(
       metadata: event.detail.metadata,
     });
   };
+}
+
+async function assertMulti(
+  schemas: { [k: string]: Schema<any> },
+  data: { [k: string]: any }
+) {
+  const values = await Promise.all(
+    Object.keys(schemas).map(
+      (key) => async () => await assert(schemas[key], data[key])
+    )
+  );
+  return Object.keys(schemas).reduce(
+    (others, key, index) => ({
+      ...others,
+      [key]: values[index],
+    }),
+    {}
+  );
 }
