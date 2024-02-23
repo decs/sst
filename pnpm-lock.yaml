@@ -372,6 +372,15 @@ importers:
       '@trpc/server':
         specifier: 9.16.0
         version: 9.16.0
+      '@typeschema/core':
+        specifier: ^0.13.0
+        version: 0.13.0
+      '@typeschema/main':
+        specifier: ^0.13.0
+        version: 0.13.0(@typeschema/zod@0.13.0)
+      '@typeschema/zod':
+        specifier: ^0.13.0
+        version: 0.13.0
       adm-zip:
         specifier: ^0.5.10
         version: 0.5.10
@@ -489,9 +498,6 @@ importers:
       yargs:
         specifier: ^17.6.2
         version: 17.6.2
-      zod:
-        specifier: ^3.21.4
-        version: 3.21.4
     devDependencies:
       '@aws-sdk/client-api-gateway':
         specifier: ^3.454.0
@@ -11612,6 +11618,84 @@ packages:
 
   /@types/yoga-layout@1.9.2:
     resolution: {integrity: sha512-S9q47ByT2pPvD65IvrWp7qppVMpk9WGMbVq9wbWZOHg6tnXSD4vyhao6nOSBwwfDdV2p3Kx9evA9vI+XWTfDvw==}
+    dev: false
+
+  /@typeschema/core@0.13.0:
+    resolution: {integrity: sha512-L0Rci3EFuq4QySNZezT+W6aINc7iQAh2EUslez5Kge0OEnw/Nd9UEbq9w7m1OKk20SoS27sZo3iANe0yFDHjyw==}
+    peerDependencies:
+      '@types/json-schema': ^7.0.15
+    peerDependenciesMeta:
+      '@types/json-schema':
+        optional: true
+    dev: false
+
+  /@typeschema/main@0.13.0(@typeschema/zod@0.13.0):
+    resolution: {integrity: sha512-FrHL121QyjfTsRRr9TyByHG76Cy0l38GuuBaRyfI8owxwNCWCMKKd1SGHQ7pAfhVTHGS2Wfugv2xA5B+8uAA8g==}
+    peerDependencies:
+      '@typeschema/arktype': 0.13.0
+      '@typeschema/deepkit': 0.13.0
+      '@typeschema/effect': 0.13.0
+      '@typeschema/function': 0.13.0
+      '@typeschema/io-ts': 0.13.0
+      '@typeschema/joi': 0.13.0
+      '@typeschema/json': 0.13.0
+      '@typeschema/ow': 0.13.0
+      '@typeschema/runtypes': 0.13.0
+      '@typeschema/superstruct': 0.13.0
+      '@typeschema/typebox': 0.13.0
+      '@typeschema/valibot': 0.13.0
+      '@typeschema/yup': 0.13.0
+      '@typeschema/zod': 0.13.0
+    peerDependenciesMeta:
+      '@typeschema/arktype':
+        optional: true
+      '@typeschema/deepkit':
+        optional: true
+      '@typeschema/effect':
+        optional: true
+      '@typeschema/function':
+        optional: true
+      '@typeschema/io-ts':
+        optional: true
+      '@typeschema/joi':
+        optional: true
+      '@typeschema/json':
+        optional: true
+      '@typeschema/ow':
+        optional: true
+      '@typeschema/runtypes':
+        optional: true
+      '@typeschema/superstruct':
+        optional: true
+      '@typeschema/typebox':
+        optional: true
+      '@typeschema/valibot':
+        optional: true
+      '@typeschema/yup':
+        optional: true
+      '@typeschema/zod':
+        optional: true
+    dependencies:
+      '@typeschema/core': 0.13.0
+      '@typeschema/zod': 0.13.0
+    transitivePeerDependencies:
+      - '@types/json-schema'
+    dev: false
+
+  /@typeschema/zod@0.13.0:
+    resolution: {integrity: sha512-T+GrlzCPeYa7Agqe+1meD/+YU2S9xZso/I7a3DRPiWnEzr1iryoDurlHjgtOwEH1qGTmEJlMrTh/AL2DiU7ptg==}
+    peerDependencies:
+      zod: ^3.22.4
+      zod-to-json-schema: ^3.22.4
+    peerDependenciesMeta:
+      zod:
+        optional: true
+      zod-to-json-schema:
+        optional: true
+    dependencies:
+      '@typeschema/core': 0.13.0
+    transitivePeerDependencies:
+      - '@types/json-schema'
     dev: false
 
   /@ungap/structured-clone@1.2.0:
@@ -25011,10 +25095,6 @@ packages:
       archiver-utils: 2.1.0
       compress-commons: 4.1.1
       readable-stream: 3.6.2
-
-  /zod@3.21.4:
-    resolution: {integrity: sha512-m46AKbrzKVzOzs/DZgVnG5H55N1sv1M8qZU3A8RIKbs3mrACDNeIOeilDymVb2HdmP8uwshOCF4uJ8uM9rCqJw==}
-    dev: false
 
   /zod@3.22.4:
     resolution: {integrity: sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg==}
